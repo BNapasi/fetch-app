@@ -12,17 +12,16 @@ export default function LoginPage() {
 
     const login = async () => {
         try {
-            const res = await fetch({
-                method: 'POST',
-                url: `${BASE_URL}/auth/login`,
+            const res = await fetch(`${BASE_URL}/auth/login`, {
                 credentials: 'include',
-                body: {
-                    name: name,
-                    email: email
-                },
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    email
+                })
             });
             if (res.status === 200) {
                 setUser({ authenticated: true, name, email });
@@ -40,10 +39,10 @@ export default function LoginPage() {
         <div className="grid place-content-center h-screen">
             <h1 className="text-8xl font-bold flex justify-center content-center mb-4">FETCH</h1>
 
-            <label for="name">Name</label>
+            <label>Name</label>
             <input id="name" className="border-2 mb-2" onChange={(e) => setName(e.target.value)}></input>
 
-            <label for="email">Email</label>
+            <label>Email</label>
             <input id="email" className="border-2" onChange={(e) => setEmail(e.target.value)}></input>
 
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" onClick={login}>Login</button>
