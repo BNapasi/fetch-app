@@ -24,7 +24,7 @@ export default function LoginPage() {
                 })
             });
             if (res.status === 200) {
-                setUser({ authenticated: true, name, email });
+                setUser({ name, email, authenticated: true });
             }
             else {
                 throw new Error('Login failed');
