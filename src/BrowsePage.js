@@ -23,12 +23,16 @@ export default function BrowsePage() {
     }, []);
 
     useEffect(() => {
-        getDogs();
-    }, [dogIds]);
+        getZipCodes();
+    }, [selectedCity, selectedState])
 
     useEffect(() => {
         getDogdogIds();
-    }, [selectedZipCodes])
+    }, [selectedZipCodes, selectedBreeds]);
+
+    useEffect(() => {
+        getDogs();
+    }, [dogIds]);
 
     async function getAllBreeds() {
         try {
@@ -151,23 +155,41 @@ export default function BrowsePage() {
                     )}
                 </div>
 
-                <div className="flex pb-10">
-                    <div className="flex flex-col">
-                        <label>Breed: </label>
-                        <select onChange={(e) => setSelectedBreeds([e.target.value])}>
-                            <option value="all">All</option>
-                            {allBreeds.map((breed) => (
-                                <option value={breed}>{breed}</option>
-                            ))}
-                        </select>
+                <div className="flex pb-10 space-x-8">
+                    <div className="flex flex-col w-1/3 space-y-4">
+                        <div>
+                            <label><b>City</b></label>
+                            <br></br>
+                            <input onChange={(e) => setSelectedCity(e.target.value)}></input>
+                        </div>
 
-                        <label>City: </label>
-                        <input onChange={(e) => setSelectedCity(e.target.value)}></input>
+                        <div>
+                            <label><b>State</b></label>
+                            <br></br>
+                            <input onChange={(e) => setSelectedState(e.target.value)}></input>
+                        </div>
 
-                        <label>State: </label>
-                        <input onChange={(e) => setSelectedState(e.target.value)}></input>
-
-                        <button onClick={getZipCodes}>SEARCH</button>
+                        <div>
+                            <label><b>Breed</b></label>
+                            <div className="h-96 overflow-y-auto text-sm">
+                                {allBreeds.map((breed) => (
+                                    <div>
+                                        <input type="checkbox" value={breed} id={breed} onChange={(e) => {
+                                            const breeds = [ ...selectedBreeds ];
+                                            if (e.target.checked) {
+                                                breeds.push(e.target.value);
+                                            }
+                                            else {
+                                                const index = breeds.indexOf(e.target.value);
+                                                breeds.splice(index, 1);
+                                            }
+                                            setSelectedBreeds(breeds);
+                                        }}/>
+                                        <label for={breed}> {breed}</label>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid gap-4 grid-cols-5">
@@ -176,7 +198,7 @@ export default function BrowsePage() {
                                 <img src={dog.img} alt={dog.name} className="h-64 w-full object-cover"/>
                                 <div className="text-center my-2">
                                     <p className="text-xl font-bold">{dog.name}</p>
-                                    <p className="text-sm">{dog.breed}</p>
+                                    <p className="text-sm">{dog.breed} • {dog.age}</p>
                                 </div>
                             </div>
                         ))}
